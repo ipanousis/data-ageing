@@ -1,0 +1,17 @@
+#!/bin/bash
+
+[[ -z $1 ]] && echo "./run <node number>" && exit 1
+
+PWD=`pwd`
+
+VOL=$PWD/volumes/node$1
+
+if [[ ! -d $VOL ]] ; then
+  echo "Host volume directory $VOL does not exist"
+  exit 1
+fi
+
+[[ ! -d $VOL/data ]] && mkdir -p $VOL/data
+[[ ! -d $VOL/logs ]] && mkdir -p $VOL/logs
+
+docker run --privileged -d -v $VOL/data:/elasticsearch/data -v $VOL/logs:/elasticsearch/logs --name "es$1" ypanousi/elasticsearch

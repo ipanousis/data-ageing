@@ -1,0 +1,21 @@
+#!/bin/bash
+[[ -z $1 || -z $2 ]] && echo "inspect-docker <container ID> <field name>" && exit 1
+
+docker inspect $1 > /dev/null
+if [[ $? == 1 ]] ; then
+  echo "Failed to inspect container with ID $1"
+  exit 1
+fi
+
+LINE=`docker inspect $1 | grep -i $2 | head -n1`
+
+if [[ $LINE == "" ]] ; then
+  echo "'$2' was not found for container with ID $1"
+  exit 1
+fi
+
+FIELD=`echo $LINE | cut -d':' -f1 | sed 's/[", ]//g'`
+VALUE=`echo $LINE | cut -d':' -f2 | sed 's/[", ]//g'`
+
+echo $VALUE
+echo $FIELD

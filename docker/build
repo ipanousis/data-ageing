@@ -1,0 +1,10 @@
+#!/bin/bash
+if [[ -z $1 ]] ; then
+  echo "./build <image>"
+  exit 1
+fi
+if [[ ! -d $1 ]] ; then
+  echo "$1 image needs to have a directory present with a Dockerfile"
+fi
+cd $1
+docker build -t "ypanousi/$1" .
