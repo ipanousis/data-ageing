@@ -7,7 +7,7 @@ if [[ $? == 1 ]] ; then
   exit 1
 fi
 
-LINE=`docker inspect $1 | grep -i $2 | head -n1`
+LINE=`docker inspect $1 | grep "\"$2\"" | head -n1`
 
 if [[ $LINE == "" ]] ; then
   echo "'$2' was not found for container with ID $1"

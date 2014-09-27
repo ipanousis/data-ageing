@@ -1,0 +1,10 @@
+#!/bin/bash
+
+[[ -z $1 ]] && echo "es-cluster-ips <number of nodes>" && exit 1
+
+IPS=""
+for i in `seq 1 $1`; do
+  IPS="$IPS `inspect-docker es$i IPAddress | head -n1`"
+done
+
+echo $IPS

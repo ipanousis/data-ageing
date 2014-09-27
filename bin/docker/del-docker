@@ -1,0 +1,3 @@
+#!/bin/bash
+[[ -z $1 ]] && echo "del-docker <container ID/name>" && exit 1
+docker stop $1 && docker rm $1
