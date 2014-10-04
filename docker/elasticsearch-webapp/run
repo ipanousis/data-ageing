@@ -1,0 +1,20 @@
+#!/bin/bash
+
+[[ -z $1 ]] && echo "./run <node number> [expose]" && exit 1
+
+EXPOSE_PORTS=
+[[ -n $2 && $2 == "expose" ]] && EXPOSE_PORTS="-p 8080:80 -p 9200:9200"
+
+PWD=`pwd`
+
+VOL=$PWD/volumes/node$1
+
+if [[ ! -d $VOL ]] ; then
+  echo "Host volume directory $VOL does not exist"
+  exit 1
+fi
+
+[[ ! -d $VOL/data ]] && mkdir -p $VOL/data
+[[ ! -d $VOL/logs ]] && mkdir -p $VOL/logs
+
+docker run --privileged -d -v $VOL/data:/elasticsearch/data -v $VOL/logs:/elasticsearch/logs $EXPOSE_PORTS --name "esw$1" ypanousi/elasticsearch-webapp
