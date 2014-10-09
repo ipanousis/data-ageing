@@ -7,4 +7,4 @@ if [[ ! -d $1 ]] ; then
   echo "$1 image needs to have a directory present with a Dockerfile"
 fi
 cd $1
-docker build -t "ypanousi/$1" .
+docker build -t "ipanousis/$1" .

@@ -1,4 +1,4 @@
-FROM ypanousi/elasticsearch
+FROM ipanousis/elasticsearch
  
 # Kibana
 RUN curl https://download.elasticsearch.org/kibana/kibana/kibana-4.0.0-BETA1.tar.gz | tar xz

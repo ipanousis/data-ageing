@@ -1,8 +1,7 @@
-FROM ypanousi/runit-ssh-java 
+FROM ipanousis/runit-ssh-java 
 
 RUN apt-get -y install curl
 
-# ElasticSearch
 RUN curl https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.0.Beta1.tar.gz | tar xz && \
     mv elasticsearch-* /elasticsearch
 

@@ -14,4 +14,4 @@ fi
 [[ ! -d $VOL/data ]] && mkdir -p $VOL/data
 [[ ! -d $VOL/logs ]] && mkdir -p $VOL/logs
 
-docker run --privileged -d -v $VOL/data:/elasticsearch/data -v $VOL/logs:/elasticsearch/logs --name "es$1" ypanousi/elasticsearch
+docker run --privileged -d -v $VOL/data:/elasticsearch/data -v $VOL/logs:/elasticsearch/logs --name "es$1" ipanousis/elasticsearch

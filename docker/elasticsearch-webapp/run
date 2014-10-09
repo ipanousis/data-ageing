@@ -17,4 +17,4 @@ fi
 [[ ! -d $VOL/data ]] && mkdir -p $VOL/data
 [[ ! -d $VOL/logs ]] && mkdir -p $VOL/logs
 
-docker run --privileged -d -v $VOL/data:/elasticsearch/data -v $VOL/logs:/elasticsearch/logs $EXPOSE_PORTS --name "esw$1" ypanousi/elasticsearch-webapp
+docker run --privileged -d -v $VOL/data:/elasticsearch/data -v $VOL/logs:/elasticsearch/logs $EXPOSE_PORTS --name "esw$1" ipanousis/elasticsearch-webapp

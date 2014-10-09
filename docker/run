@@ -3,4 +3,4 @@ if [[ -z $1 ]] ; then
   echo "./run <image>"
   exit 1
 fi
-docker run --privileged -d ypanousi/$1
+docker run --privileged -d ipanousis/$1
