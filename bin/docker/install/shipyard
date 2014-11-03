@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# run shipyard
+docker run -it -d --name shipyard-rethinkdb-data --entrypoint /bin/bash shipyard/rethinkdb -l
+docker run -it -P -d --name shipyard-rethinkdb --volumes-from shipyard-rethinkdb-data shipyard/rethinkdb
+docker run -it -p 8080:8080 -d --name shipyard --link shipyard-rethinkdb:rethinkdb shipyard/shipyard
+
+# install shipyard
+SHIPYARD_INIT=$(cat <<EOF
+description "Shipyard containers"
+author "ypanousi"
+start on filesystem and started docker
+stop on runlevel [!2345]
+respawn
+script
+  /usr/bin/docker start -a shipyard-rethinkdb-data
+  /usr/bin/docker start -a shipyard-rethinkdb
+  /usr/bin/docker start -a shipyard
+end script
+EOF)
+
+echo "$SHIPYARD_INIT" | sudo tee /etc/init/docker-shipyard.conf

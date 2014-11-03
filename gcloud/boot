@@ -1,2 +1,0 @@
-#!/bin/bash
-gcloud compute instances create $1 --image coreos --machine-type f1-micro --metadata-from-file user-data=cloud-config.yml

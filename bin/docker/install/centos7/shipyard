@@ -1,0 +1,56 @@
+#!/bin/bash
+
+SHIPYARD_RDB_UNIT=$(cat <<EOF
+[Unit]
+Description=Shipyard RethinkDB Data
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill shipyard-rethinkdb-data ; /usr/bin/docker rm shipyard-rethinkdb-data
+ExecStart=/usr/bin/docker run -it -d --name shipyard-rethinkdb-data --entrypoint /bin/bash shipyard/rethinkdb -l
+
+[Install]
+WantedBy=multi-user.target
+EOF)
+
+echo "$SHIPYARD_RDB_UNIT" | sudo tee /usr/lib/systemd/system/shipyard-rethinkdb-data.service
+
+SHIPYARD_RDB_UNIT=$(cat <<EOF
+[Unit]
+Description=Shipyard RethinkDB
+After=shipyard-rethinkdb-data.service
+Requires=shipyard-rethinkdb-data.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill shipyard-rethinkdb ; /usr/bin/docker rm shipyard-rethinkdb
+ExecStart=/usr/bin/docker run -it -P -d --name shipyard-rethinkdb --volumes-from shipyard-rethinkdb-data shipyard/rethinkdb
+
+[Install]
+WantedBy=multi-user.target
+EOF)
+
+echo "$SHIPYARD_RDB_UNIT" | sudo tee /usr/lib/systemd/system/shipyard-rethinkdb.service
+
+SHIPYARD_UNIT=$(cat <<EOF
+[Unit]
+Description=Shipyard UI
+After=shipyard-rethinkdb.service
+Requires=shipyard-rethinkdb.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill shipyard ; /usr/bin/docker rm shipyard
+ExecStart=/usr/bin/docker run -it -p 8080:8080 -d --name shipyard --link shipyard-rethinkdb:rethinkdb shipyard/shipyard
+
+[Install]
+WantedBy=multi-user.target
+EOF)
+
+echo "$SHIPYARD_UNIT" | sudo tee /usr/lib/systemd/system/shipyard.service
+
+sudo systemctl enable shipyard.service
+sudo systemctl start  shipyard.service
+
