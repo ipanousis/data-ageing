@@ -1,5 +1,7 @@
 #!/bin/sh
 
+sudo apt-get install gcc python2.7 python-virtualenv python2.7-dev
+
 # Create a virtualenv, an isolated Python environment, in a new directory called
 # "flocker-tutorial":
 virtualenv --python=/usr/bin/python2.7 flocker-tutorial

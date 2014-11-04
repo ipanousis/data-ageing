@@ -8,14 +8,16 @@ Requires=docker.service
 
 [Service]
 TimeoutStartSec=0
-ExecStartPre=-/usr/bin/docker kill shipyard-rethinkdb-data ; /usr/bin/docker rm shipyard-rethinkdb-data
+ExecStartPre=-/usr/bin/docker pull shipyard/rethinkdb
 ExecStart=/usr/bin/docker run -it -d --name shipyard-rethinkdb-data --entrypoint /bin/bash shipyard/rethinkdb -l
 
 [Install]
 WantedBy=multi-user.target
-EOF)
+EOF
+)
 
-echo "$SHIPYARD_RDB_UNIT" | sudo tee /usr/lib/systemd/system/shipyard-rethinkdb-data.service
+echo "Installing shipyard-rethinkdb-data unit"
+echo "$SHIPYARD_RDB_UNIT" > /usr/lib/systemd/system/shipyard-rethinkdb-data.service
 
 SHIPYARD_RDB_UNIT=$(cat <<EOF
 [Unit]
@@ -25,14 +27,15 @@ Requires=shipyard-rethinkdb-data.service
 
 [Service]
 TimeoutStartSec=0
-ExecStartPre=-/usr/bin/docker kill shipyard-rethinkdb ; /usr/bin/docker rm shipyard-rethinkdb
 ExecStart=/usr/bin/docker run -it -P -d --name shipyard-rethinkdb --volumes-from shipyard-rethinkdb-data shipyard/rethinkdb
 
 [Install]
 WantedBy=multi-user.target
-EOF)
+EOF
+)
 
-echo "$SHIPYARD_RDB_UNIT" | sudo tee /usr/lib/systemd/system/shipyard-rethinkdb.service
+echo "Installing shipyard-rethinkdb unit"
+echo "$SHIPYARD_RDB_UNIT" > /usr/lib/systemd/system/shipyard-rethinkdb.service
 
 SHIPYARD_UNIT=$(cat <<EOF
 [Unit]
@@ -42,15 +45,23 @@ Requires=shipyard-rethinkdb.service
 
 [Service]
 TimeoutStartSec=0
-ExecStartPre=-/usr/bin/docker kill shipyard ; /usr/bin/docker rm shipyard
-ExecStart=/usr/bin/docker run -it -p 8080:8080 -d --name shipyard --link shipyard-rethinkdb:rethinkdb shipyard/shipyard
+ExecStartPre=-/usr/bin/docker pull shipyard/shipyard
+ExecStart=/usr/bin/docker run -it -p 80:8080 -d --name shipyard --link shipyard-rethinkdb:rethinkdb shipyard/shipyard
 
 [Install]
 WantedBy=multi-user.target
-EOF)
+EOF
+)
 
-echo "$SHIPYARD_UNIT" | sudo tee /usr/lib/systemd/system/shipyard.service
+echo "Installing shipyard unit"
+echo "$SHIPYARD_UNIT" > /usr/lib/systemd/system/shipyard.service
 
-sudo systemctl enable shipyard.service
-sudo systemctl start  shipyard.service
+echo "Enabling shipyard units at boot time"
+systemctl enable shipyard-rethinkdb-data.service
+systemctl enable shipyard-rethinkdb.service
+systemctl enable shipyard.service
 
+echo "Starting shipyard units..."
+systemctl start  shipyard-rethinkdb-data.service
+systemctl start  shipyard-rethinkdb.service
+systemctl start  shipyard.service
