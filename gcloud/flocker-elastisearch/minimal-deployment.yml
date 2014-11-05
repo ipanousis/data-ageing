@@ -1,3 +1,7 @@
 "version": 1
 "nodes":
   "104.155.3.210": ["elasticsearch"]
+  "192.158.30.143": ["elasticsearch"]
+  "130.211.82.200": ["elasticsearch"]
+  "146.148.20.234": ["elasticsearch"]
+

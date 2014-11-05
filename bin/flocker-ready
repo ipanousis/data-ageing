@@ -1,0 +1,20 @@
+#!/bin/bash
+
+[[ -z $1 ]] && echo "flocker-ready <host>" && exit 1
+
+HOST=$1
+
+ssh -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$HOST "docker ps" &> /dev/null
+DOCKER_CHECK=$?
+if [[ ! $DOCKER_CHECK == 0 ]] ; then
+  echo "$HOST is not flocker-ready: 'docker ps' returned with $DOCKER_CHECK" >&2
+  exit 1
+fi
+ssh -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$HOST "flocker-reportstate" &> /dev/null
+FLOCKER_CHECK=$?
+if [[ ! $FLOCKER_CHECK == 0 ]] ; then
+  echo "$HOST is not flocker-ready: 'flocker-reportstate' returned with $FLOCKER_CHECK" >&2
+  exit 1
+fi
+
+echo "$HOST is flocker-ready"
