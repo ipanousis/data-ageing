@@ -31,17 +31,16 @@ Flocker:
 
 - install vagrant dev version by following README-vagrant
 
-- vagrant up flocker-1 sheperd
-- vagrant up flocker-2 sheperd
-- vagrant up flocker-3 sheperd
+- vagrant up 
+- sh virtualbox-populate-hosts.sh
 
-- go into flocker-elasticsearch and populate deployment.yml with the second interface IP of the VMs
-
-- run etcd, docker-register and confd
-
-- populate a service name (from application.yml) in one or more of the IPs in deployment.yml
+- go into flocker/ and populate deployment.yml with the private IP of the VMs
+( run etcd, docker-register and confd )
 
 - flocker-deploy deployment.yml application.yml
+
+- then, e.g., put elasticsearch service name (from application.yml) in one or more of the IPs in deployment.yml
+- and do flocker-deploy deployment.yml application.yml
 
 2. If using flocker with google cloud
 
