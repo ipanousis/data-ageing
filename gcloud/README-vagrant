@@ -1,0 +1,16 @@
+rvm install 2.0.0
+
+git clone https://github.com/mitchellh/vagrant-spec
+cd vagrant-spec
+gem install pkg/vagrant-spec-0.0.1.gem
+
+git clone https://github.com/mitchellh/vagrant
+cd vagrant
+bundle install
+rake install
+
+
+-----------------------
+
+
+when opening a new terminal, run: "rvm use 2.0.0"

@@ -27,25 +27,27 @@ GCE without CoreOS:
 
 Flocker:
 
-sudo apt-get install gcc python2.7 python-virtualenv python2.7-dev
+1. If testing flocker on using virtualbox
 
-sh install-flocker.sh
+- install vagrant dev version by following README-vagrant
 
-mkdir flocker-mongodb
-cd flocker-mongodb
-curl -O https://docs.clusterhq.com/en/latest/_downloads/Vagrantfile
-vagrant up
+- vagrant up flocker-1 sheperd
+- vagrant up flocker-2 sheperd
+- vagrant up flocker-3 sheperd
 
-ssh-add
-ssh-add ~/.vagrant.d/insecure_private_key
+- go into flocker-elasticsearch and populate deployment.yml with the second interface IP of the VMs
 
-sudo apt-get install mongodb-clients
+- run etcd, docker-register and confd
 
+- populate a service name (from application.yml) in one or more of the IPs in deployment.yml
 
-Flocker on CentOS:
+- flocker-deploy deployment.yml application.yml
 
-vagrant box add centos65-x86_64-20140116 https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box
+2. If using flocker with google cloud
 
+Notes:
+
+- the deployment.yml will control all services started on the flocker cluster even if they are not contained in the application.yml provided last
 
 ++++++++
 

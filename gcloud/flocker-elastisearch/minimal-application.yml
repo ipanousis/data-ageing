@@ -1,7 +1,0 @@
-"version": 1
-"applications":
-  "elasticsearch":
-    "image": "dockerfile/elasticsearch"
-    "ports":
-    - "internal": 9200
-      "external": 9200
