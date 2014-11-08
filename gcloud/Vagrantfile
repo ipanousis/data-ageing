@@ -1,17 +1,16 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# This requires Vagrant 1.6.2 or newer (earlier versions can't reliably
-# configure the Fedora 20 network stack).
-Vagrant.require_version ">= 1.6.2"
+# This requires Vagrant 1.7.0dev or newer (earlier versions can't reliably
+# configure the centos network stack).
+Vagrant.require_version ">= 1.6.3"
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
 
-FLOCKER_VM=ARGV[1]
-SHEPERD_VM="sheperd"
+FLOCKER_VMS=["flocker-1","flocker-2"]
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -21,13 +20,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "chef/centos-7.0"
   config.vm.box_version = "= 1.0.0"
 
-  config.vm.define FLOCKER_VM do |flocker_node|
-    flocker_node.vm.hostname = FLOCKER_VM
-    flocker_node.vm.network "private_network", type: "dhcp"
-  end
-  config.vm.define SHEPERD_VM do |sheperd|
-    sheperd.vm.hostname = SHEPERD_VM
-    sheperd.vm.network "private_network", type: "dhcp"
+  FLOCKER_VMS.each do |node_name|
+    config.vm.define node_name do |flocker_node|
+      flocker_node.vm.hostname = node_name
+      flocker_node.vm.network "private_network", type: "dhcp"
+    end
   end
 
 end

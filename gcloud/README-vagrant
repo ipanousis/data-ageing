@@ -9,6 +9,8 @@ cd vagrant
 bundle install
 rake install
 
+cd <data-ageing>/gcloud
+bundle install
 
 -----------------------
 
